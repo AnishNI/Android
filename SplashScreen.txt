@@ -1,56 +1,30 @@
-//JAVA
-package com.example.myapplication
+1.Open AndroidManifest.xml.
+add this :
+2. note if there is any Red Color press Alt+Enter at same time
+@style/Theme.AppCompat.Light.NoActionBar
+3. rename file of activity.xml  to activity_splash.xml 
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+Here's an example code for SplashActivity.java:
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+
+Java
+public class SplashActivity extends AppCompatActivity {
+
+    private static final int SPLASH_SCREEN_TIME_OUT = 2000; // 2 seconds
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Set full screen     if red line apper Alt+Enter
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        setContentView(R.layout.activity_splash);
+
+        new Handler().postDelayed(() -> {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }, SPLASH_SCREEN_TIME_OUT);
     }
 }
-
-//XML
-
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background='#4B5FCA'
-    android:gravity="center"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome!"
-        android:textColor="@color/white"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        tools:ignore="HardcodedText" />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="152dp"
-        app:srcCompat="@drawable/ic_launcher_foreground" />
-</LinearLayout>
-
-
-
