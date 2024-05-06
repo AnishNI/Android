@@ -1,0 +1,104 @@
+2.Create an Android application which examine a phone number entered by a user with the given format. • Area code should be one of the following: 040, 041, 050, 0400, 044 • There should 6 - 8 numbers in telephone number (+ area code).
+
+
+
+2. Implement Phone Number Validation Method:
+
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private static final String[] VALID_AREA_CODES = {"040", "041", "050", "0400", "044"};
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.isEmpty()) {
+            return false;
+        }
+
+        // Remove non-numeric characters
+        phoneNumber = phoneNumber.replaceAll("[^0-9]", "");
+
+        // Check length (6 to 8 digits)
+        int length = phoneNumber.length();
+        if (length < 6 || length > 8) {
+            return false;
+        }
+
+        // Check area code
+        String areaCode = phoneNumber.substring(0, Math.min(phoneNumber.length(), 4));
+        return Arrays.asList(VALID_AREA_CODES).contains(areaCode);
+    }
+}
+
+
+
+3. Create the Activity Layout (activity_main.xml):
+
+XML
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/phone_number_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter phone number"
+        android:inputType="phone" />
+
+    <Button
+        android:id="@+id/check_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Check Phone Number" />
+
+    <TextView
+        android:id="@+id/result_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="" />
+
+</LinearLayout>
+
+
+
+
+4. Create the Activity Class (MainActivity.java):
+
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private static final String[] VALID_AREA_CODES = {"040", "041", "050", "0400", "044"};
+
+    private EditText phoneNumberInput;
+    private Button checkButton;
+    private TextView resultLabel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        phoneNumberInput = findViewById(R.id.phone_number_input);
+        checkButton = findViewById(R.id.check_button);
+        resultLabel = findViewById(R.id.result_label);
+
+        checkButton.setOnClickListener(v -> {
+            String phoneNumber = phoneNumberInput.getText().toString().trim();
+            if (isValidPhoneNumber(phoneNumber)) {
+                resultLabel.setText(phoneNumber + " is a valid phone number");
+            } else {
+                resultLabel.setText(phoneNumber + " is not a valid phone number");
+            }
+        });
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        // ... (implementation from step 2) ...
+    }
+}
