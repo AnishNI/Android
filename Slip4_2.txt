@@ -1,0 +1,67 @@
+Q.2) Write a program to search a specific location on Google Map.
+To write an Android application to search for a specific location on Google Maps, you can use the Google Maps SDK for Android provided by Google. Here's a basic example of how you can achieve this:
+Set up a new Android project in Android Studio.
+Add the Google Maps SDK to your project.
+Create a layout file for your activity with a search bar and a map fragment.
+Write Java code to handle user input, search for the location, and display it on the map.
+Here's a simplified version of the code:
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    private GoogleMap mMap;
+    private EditText searchEditText;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+
+        searchEditText = findViewById(R.id.searchEditText);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Set default location (e.g., city center)
+        LatLng defaultLocation = new LatLng(0, 0);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(defaultLocation, 10));
+
+        // Handle search button click
+        findViewById(R.id.searchButton).setOnClickListener(view -> {
+            String locationName = searchEditText.getText().toString().trim();
+            if (!locationName.isEmpty()) {
+                searchLocation(locationName);
+            } else {
+                Toast.makeText(this, "Please enter a location to search", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void searchLocation(String locationName) {
+        // Perform the search and update the map
+        // Here you can use Geocoding API or any other service to get the LatLng of the location
+        // For simplicity, this example just adds a marker at a fixed location
+        LatLng searchedLocation = new LatLng(37.7749, -122.4194); // San Francisco, CA
+        mMap.clear(); // Clear previous markers
+        mMap.addMarker(new MarkerOptions().position(searchedLocation).title(locationName));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedLocation, 15));
+    }
+}
