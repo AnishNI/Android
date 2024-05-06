@@ -1,0 +1,134 @@
+2.) Java Android Program to perform all arithmetic Operations using Calculator
+
+
+
+1. Layout File (activity_main.xml):
+
+XML
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/result_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:text="0"
+        android:textAlignment="textEnd" />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4">
+
+        <Button
+            android:id="@+id/button_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/button_8"
+            android:layout_width="wrap_content"
+            android.layout_height="wrap_content"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/button_9"
+            android:layout_width="wrap_content"
+            android.layout_height="wrap_content"
+            android:text="9" />
+
+        <Button
+            android:id="@+id/button_divide"
+            android:layout_width="wrap_content"
+            android.layout_height="wrap_content"
+            android:text="/" />
+
+        </GridLayout>
+
+</LinearLayout>
+
+
+
+
+2. Activity Class (MainActivity.java):
+
+
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private TextView resultText;
+    private double firstNumber = Double.NaN; // To check if a number is entered
+    private char operator;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        resultText = findViewById(R.id.result_text);
+
+        // Set click listeners for number buttons
+        findViewById(R.id.button_7).setOnClickListener(numberClickListener);
+        // ... add click listeners for other number buttons ...
+
+        // Set click listeners for operator buttons
+        findViewById(R.id.button_divide).setOnClickListener(operatorClickListener);
+        // ... add click listeners for other operator buttons ...
+
+        // Button to clear the display
+        findViewById(R.id.button_clear).setOnClickListener(v -> {
+            clearCalculator();
+        });
+
+        // Button to calculate the result
+        findViewById(R.id.button_equal).setOnClickListener(v -> {
+            calculateResult();
+        });
+    }
+
+    private View.OnClickListener numberClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String number = ((Button) v).getText().toString();
+            appendNumberToResult(number);
+        }
+    };
+
+    private View.OnClickListener operatorClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            char op = ((Button) v).getText().toString().charAt(0);
+            setOperator(op);
+        }
+    };
+
+    private void appendNumberToResult(String number) {
+        String currentResult = resultText.getText().toString();
+        if (currentResult.equals("0") || firstNumber == Double.NaN) {
+            resultText.setText(number);
+        } else {
+            resultText.setText(currentResult + number);
+        }
+        firstNumber = Double.parseDouble(currentResult);
+    }
+
+    private void setOperator(char op) {
+        if (!Double.isNaN(firstNumber)) {
+            operator = op;
+            resultText.setText("0"); // Clear display for next number
+        }
+    }
+
+    private void calculateResult() {
+        if (!Double.isNaN(firstNumber)) {
+            double secondNumber = Double.parseDouble(resultText.getText().toString());
+}
+}
