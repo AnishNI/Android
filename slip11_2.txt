@@ -1,0 +1,149 @@
+Create an Android Application to perform following string operation 
+according to user selection of radio button
+
+
+Design the User Interface (XML Layout):
+Create activity_main.xml layout file:
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editTextInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a string"
+        android:layout_marginTop="20dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextInput"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radioButtonReverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reverse String" />
+
+        <RadioButton
+            android:id="@+id/radioButtonUpperCase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Convert to Uppercase" />
+
+        <RadioButton
+            android:id="@+id/radioButtonLowerCase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Convert to Lowercase" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonApply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/radioGroup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Apply Operation"/>
+
+    <TextView
+        android:id="@+id/textViewResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonApply"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp" />
+
+</RelativeLayout>
+
+
+
+
+Implement the Logic (Java Code):
+Create MainActivity.java file:
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText editTextInput;
+    RadioGroup radioGroup;
+    Button buttonApply;
+    TextView textViewResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editTextInput = findViewById(R.id.editTextInput);
+        radioGroup = findViewById(R.id.radioGroup);
+        buttonApply = findViewById(R.id.buttonApply);
+        textViewResult = findViewById(R.id.textViewResult);
+
+        buttonApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                performOperation();
+            }
+        });
+    }
+
+    private void performOperation() {
+        String input = editTextInput.getText().toString();
+        int selectedId = radioGroup.getCheckedRadioButtonId();
+
+        if (selectedId == -1) {
+            // No radio button selected
+            textViewResult.setText("Please select an operation");
+            return;
+        }
+
+        RadioButton radioButton = findViewById(selectedId);
+        String operation = radioButton.getText().toString();
+
+        switch (operation) {
+            case "Reverse String":
+                textViewResult.setText(reverseString(input));
+                break;
+            case "Convert to Uppercase":
+                textViewResult.setText(input.toUpperCase());
+                break;
+            case "Convert to Lowercase":
+                textViewResult.setText(input.toLowerCase());
+                break;
+            default:
+                textViewResult.setText("Invalid operation");
+                break;
+        }
+    }
+
+    private String reverseString(String input) {
+        return new StringBuilder(input).reverse().toString();
+    }
+}
+
+
+
+
+
+Run the Application:
+After creating the layout and the Java code, run the application on an emulator or a real device to see how it works. You should be able to enter a string, select an operation using radio buttons, and see the result displayed below.
+This application allows users to input a string and select one of three operations (reverse string, convert to uppercase, or convert to lowercase) using radio buttons. It then displays the result of the selected operation.
