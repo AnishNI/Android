@@ -1,0 +1,35 @@
+Create table Customer (id, name, address, ph_no). Create Application for performing the following operation on the table. (Using SQLite database). i] Insert new customer details (At least 5 records). ii] Show all the customer details
+
+
+Define the Customer table:
+sql
+Copy code
+CREATE TABLE Customer ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, ph_no TEXT );
+Implement the Android application:
+
+
+Certainly! Here's an Android application that allows you to perform CRUD operations on a SQLite database table named Customer.
+
+Define the Customer table:
+sql
+Copy code
+CREATE TABLE Customer ( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, address TEXT, ph_no TEXT );
+Implement the Android application:
+Create an Android application with the following components:
+
+Layout XML files for UI design.
+Java code to handle database operations.
+Here's a basic implementation:
+
+Layout XML file for the main activity (activity_main.xml):
+xml
+Copy code
+<!-- activity_main.xml --> <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="16dp" tools:context=".MainActivity"> <Button android:id="@+id/btnInsert" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Insert Customer" /> <Button android:id="@+id/btnShowAll" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Show All Customers" /> <TextView android:id="@+id/tvResult" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="" /> </LinearLayout>
+Java code for main activity (MainActivity.java):
+java
+Copy code
+import android.content.ContentValues; import android.database.Cursor; import android.database.sqlite.SQLiteDatabase; import android.os.Bundle; import android.support.v7.app.AppCompatActivity; import android.view.View; import android.widget.Button; import android.widget.TextView; import android.widget.Toast; public class MainActivity extends AppCompatActivity { private SQLiteDatabase mDatabase; @Override protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); // Create or open the database CustomerDbHelper dbHelper = new CustomerDbHelper(this); mDatabase = dbHelper.getWritableDatabase(); Button btnInsert = findViewById(R.id.btnInsert); Button btnShowAll = findViewById(R.id.btnShowAll); final TextView tvResult = findViewById(R.id.tvResult); btnInsert.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) { insertCustomer("John Doe", "123 Main St", "1234567890"); insertCustomer("Jane Smith", "456 Elm St", "9876543210"); insertCustomer("Alice Johnson", "789 Oak St", "5551234567"); insertCustomer("Bob Brown", "111 Pine St", "4449876543"); insertCustomer("Eva Garcia", "222 Maple St", "2223334444"); Toast.makeText(MainActivity.this, "Customers inserted successfully", Toast.LENGTH_SHORT).show(); } }); btnShowAll.setOnClickListener(new View.OnClickListener() { @Override public void onClick(View v) { Cursor cursor = mDatabase.rawQuery("SELECT * FROM Customer", null); StringBuilder result = new StringBuilder(); while (cursor.moveToNext()) { int id = cursor.getInt(cursor.getColumnIndex("id")); String name = cursor.getString(cursor.getColumnIndex("name")); String address = cursor.getString(cursor.getColumnIndex("address")); String phone = cursor.getString(cursor.getColumnIndex("ph_no")); result.append("ID: ").append(id).append(", Name: ").append(name).append(", Address: ").append(address).append(", Phone: ").append(phone).append("\n"); } tvResult.setText(result.toString()); cursor.close(); } }); } private void insertCustomer(String name, String address, String phone) { ContentValues contentValues = new ContentValues(); contentValues.put("name", name); contentValues.put("address", address); contentValues.put("ph_no", phone); mDatabase.insert("Customer", null, contentValues); } }
+Database helper class (CustomerDbHelper.java):
+java
+Copy code
+import android.content.Context; import android.database.sqlite.SQLiteDatabase; import android.database.sqlite.SQLiteOpenHelper; public class CustomerDbHelper extends SQLiteOpenHelper { private static final String DATABASE_NAME = "Customer.db"; private static final int DATABASE_VERSION = 1; public CustomerDbHelper(Context context) { super(context, DATABASE_NAME, null, DATABASE_VERSION); } @Override public void onCreate(SQLiteDatabase db) { final String SQL_CREATE_CUSTOMER_TABLE = "CREATE TABLE Customer (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "name TEXT," + "address TEXT," + "ph_no TEXT);"; db.execSQL(SQL_CREATE_CUSTOMER_TABLE); } @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { db.execSQL("DROP TABLE IF EXISTS Customer"); onCreate(db); } }
