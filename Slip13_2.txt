@@ -1,0 +1,147 @@
+Write a Java Android Program to Demonstrate List View Activity with all 
+operations Such as: Insert, Delete, Search
+
+Create the Layout (XML):
+Create activity_main.xml layout file:
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter item to add"
+        android:layout_margin="16dp"
+        android:imeOptions="actionDone"/>
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editText"
+        android:layout_centerHorizontal="true"
+        android:text="Add Item"/>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnAdd"
+        android:layout_marginTop="16dp"/>
+
+</RelativeLayout>
+
+
+Create the Adapter:
+We'll need a custom ArrayAdapter to bind data to the ListView. Create a new Java class named CustomAdapter.java:
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import java.util.ArrayList;
+
+public class CustomAdapter extends ArrayAdapter<String> {
+
+    private ArrayList<String> dataSet;
+    private Context mContext;
+
+    private static class ViewHolder {
+        TextView textView;
+    }
+
+    public CustomAdapter(ArrayList<String> data, Context context) {
+        super(context, R.layout.item_row, data);
+        this.dataSet = data;
+        this.mContext = context;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        String dataModel = getItem(position);
+        ViewHolder viewHolder;
+
+        final View result;
+
+        if (convertView == null) {
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.item_row, parent, false);
+            viewHolder.textView = convertView.findViewById(R.id.textView);
+            result = convertView;
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+            result = convertView;
+        }
+
+        viewHolder.textView.setText(dataModel);
+        return result;
+    }
+}
+
+
+Create the Item Row Layout:
+Create item_row.xml layout file under the res/layout directory:
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"/>
+
+
+Implement the Logic:
+Now, in your MainActivity.java, you can implement the logic for adding, deleting, and searching items:
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText editText;
+    Button btnAdd;
+    ListView listView;
+    ArrayList<String> arrayList;
+    ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        btnAdd = findViewById(R.id.btnAdd);
+        listView = findViewById(R.id.listView);
+
+        arrayList = new ArrayList<>();
+        adapter = new CustomAdapter(arrayList, this);
+        listView.setAdapter(adapter);
+
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String item = editText.getText().toString();
+                if (!item.isEmpty()) {
+                    arrayList.add(item);
+                    adapter.notifyDataSetChanged();
+                    editText.getText().clear();
+                } else {
+                    Toast.makeText(MainActivity.this, "Please enter an item", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+}
