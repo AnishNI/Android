@@ -1,0 +1,281 @@
+Design the User Interface (XML Layout):
+Create activity_main.xml layout file:
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your name"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupFormat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextName"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioButtonBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bold" />
+
+        <RadioButton
+            android:id="@+id/radioButtonItalic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Italic" />
+
+        <RadioButton
+            android:id="@+id/radioButtonUnderline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Underline" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/checkBoxColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Change color"
+        android:layout_below="@id/radioGroupFormat"
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="16dp"/>
+
+    <Button
+        android:id="@+id/buttonDisplayMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Display Message"
+        android:layout_below="@id/checkBoxColor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/buttonClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear"
+        android:layout_below="@id/buttonDisplayMessage"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:id="@+id/buttonExit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:layout_below="@id/buttonDisplayMessage"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="16dp"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/textViewMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonDisplayMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"/>
+
+</RelativeLayout>
+
+
+
+Implement the Logic (Java Code):
+Create MainActivity.java file:
+import android.graphics.Color;
+
+import android.os.Bundle;
+
+import android.text.SpannableString;
+
+import android.text.Spanned;
+
+import android.text.style.ForegroundColorSpan;
+
+import android.text.style.StyleSpan;
+
+import android.text.style.UnderlineSpan;
+
+import android.view.View;
+
+import android.widget.Button;
+
+import android.widget.CheckBox;
+
+import android.widget.EditText;
+
+import android.widget.RadioButton;
+
+import android.widget.RadioGroup;
+
+import android.widget.TextView;
+
+
+
+import androidx.appcompat.app.AppCompatActivity;
+
+
+
+public class MainActivity extends AppCompatActivity {
+
+
+
+    EditText editTextName;
+
+    RadioGroup radioGroupFormat;
+
+    RadioButton radioButtonBold, radioButtonItalic, radioButtonUnderline;
+
+    CheckBox checkBoxColor;
+
+    Button buttonDisplayMessage, buttonClear, buttonExit;
+
+    TextView textViewMessage;
+
+
+
+    @Override
+
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+
+
+        editTextName = findViewById(R.id.editTextName);
+
+        radioGroupFormat = findViewById(R.id.radioGroupFormat);
+
+        radioButtonBold = findViewById(R.id.radioButtonBold);
+
+        radioButtonItalic = findViewById(R.id.radioButtonItalic);
+
+        radioButtonUnderline = findViewById(R.id.radioButtonUnderline);
+
+        checkBoxColor = findViewById(R.id.checkBoxColor);
+
+        buttonDisplayMessage = findViewById(R.id.buttonDisplayMessage);
+
+        buttonClear = findViewById(R.id.buttonClear);
+
+        buttonExit = findViewById(R.id.buttonExit);
+
+        textViewMessage = findViewById(R.id.textViewMessage);
+
+
+
+        buttonDisplayMessage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View v) {
+
+                displayMessage();
+
+            }
+
+        });
+
+
+
+        buttonClear.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View v) {
+
+                clearInputs();
+
+            }
+
+        });
+
+
+
+        buttonExit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View v) {
+
+                finish(); // Close the app
+
+            }
+
+        });
+
+    }
+
+
+
+    private void displayMessage() {
+
+        String name = editTextName.getText().toString();
+
+        SpannableString formattedText = new SpannableString(name);
+
+
+
+        // Apply formatting based on radio button selection
+
+        if (radioButtonBold.isChecked()) {
+
+            formattedText.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        }
+
+        if (radioButtonItalic.isChecked()) {
+
+            formattedText.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        }
+
+        if (radioButtonUnderline.isChecked()) {
+
+            formattedText.setSpan(new UnderlineSpan(), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        }
+
+
+
+        // Apply color if checkbox is checked
+
+        if (checkBoxColor.isChecked()) {
+
+            formattedText.setSpan(new ForegroundColorSpan(Color.RED), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        }
+
+
+
+        textViewMessage.setText(formattedText);
+
+    }
+
+
+
+    private void clearInputs() {
+
+        editTextName.getText().clear();
+
+        textViewMessage.setText("");
+
+    }
+
+
+}
