@@ -1,0 +1,133 @@
+Construct an Android application to accept a number and calculate and display Factorial of a given number in TextView.
+
+
+
+Design the User Interface (XML Layout):
+Create activity_main.xml layout file:
+ 
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+
+    tools:context=".MainActivity">
+
+
+
+    <EditText
+
+        android:id="@+id/editTextNumber"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:hint="Enter a number"
+
+        android:inputType="number"/>
+
+
+
+    <Button
+
+        android:id="@+id/buttonCalculate"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/editTextNumber"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="16dp"
+
+        android:text="Calculate Factorial"/>
+
+
+
+    <TextView
+
+        android:id="@+id/textViewResult"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/buttonCalculate"
+
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="16dp"
+
+        android:textSize="18sp"/>
+
+
+
+</RelativeLayout>
+
+
+
+
+
+
+Implement the Logic (Java Code):
+Create MainActivity.java file:
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import java.math.BigInteger;
+
+public class MainActivity extends AppCompatActivity {
+
+    EditText editTextNumber;
+    Button buttonCalculate;
+    TextView textViewResult;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editTextNumber = findViewById(R.id.editTextNumber);
+        buttonCalculate = findViewById(R.id.buttonCalculate);
+        textViewResult = findViewById(R.id.textViewResult);
+
+        buttonCalculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                calculateFactorial();
+            }
+        });
+    }
+
+    private void calculateFactorial() {
+        String input = editTextNumber.getText().toString().trim();
+
+        if (input.isEmpty()) {
+            textViewResult.setText("Please enter a number");
+            return;
+        }
+
+        int number = Integer.parseInt(input);
+
+        if (number < 0) {
+            textViewResult.setText("Factorial is not defined for negative numbers");
+            return;
+        }
+
+        BigInteger factorial = BigInteger.ONE;
+        for (int i = 1; i <= number; i++) {
+            factorial = factorial.multiply(BigInteger.valueOf(i));
+        }
+
+        textViewResult.setText("Factorial of " + number + " is:\n" + factorial.toString());
+    }
+}
