@@ -1,64 +1,99 @@
-Q.1) Java Android Program to Demonstrate Alert Dialog Box.
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <Button
-        android:id="@+id/show_alert_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show Alert Dialog"
-        android:layout_centerInParent="true"/>
-
-</RelativeLayout>
-
-
-
-
-
+1.Java Android Program to Demonstrate Alert Dialog Box
 
 import android.app.AlertDialog;
+
 import android.content.DialogInterface;
+
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
 import android.view.View;
+
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        Button showAlertButton = findViewById(R.id.show_alert_button);
+
+
+        // Get reference to the button
+
+        Button showAlertButton = findViewById(R.id.showAlertButton);
+
+
+
+        // Set click listener for the button
 
         showAlertButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
+
             public void onClick(View v) {
-                // Create an AlertDialog Builder
+
+                // Create AlertDialog builder
+
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
-                // Set the title and message of the dialog
-                alertDialogBuilder.setTitle("Alert Dialog");
-                alertDialogBuilder.setMessage("This is an example of an AlertDialog.");
 
-                // Add positive button and its action
+
+                // Set title and message for AlertDialog
+
+                alertDialogBuilder.setTitle("Alert Dialog");
+
+                alertDialogBuilder.setMessage("This is an example of an Alert Dialog");
+
+
+
+                // Set positive button and its click listener
+
                 alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
                     @Override
+
                     public void onClick(DialogInterface dialog, int which) {
-                        // Action to perform when OK button is clicked
+
+                        // Do something when OK button is clicked
+
                         dialog.dismiss();
+
                     }
+
                 });
 
-                // Create and show the AlertDialog
+
+
+                // Create and show AlertDialog
+
                 AlertDialog alertDialog = alertDialogBuilder.create();
+
                 alertDialog.show();
+
             }
+
         });
+
     }
+
 }
+
+
+
+in this program:
+We create an AlertDialog.Builder object alertDialogBuilder.
+We set the title and message for the AlertDialog using setTitle() and setMessage().
+We set the positive button for the AlertDialog using setPositiveButton(). When the user clicks this button, the dialog is dismissed.
+We create the AlertDialog object by calling create() on the builder.
+We call show() on the AlertDialog object to display the dialog to the user.
+Make sure to have a layout file (e.g., activity_main.xml) with a button (e.g., showAlertButton) that triggers the display of the AlertDialog.
