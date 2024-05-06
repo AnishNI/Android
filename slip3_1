@@ -1,0 +1,126 @@
+Slip 3
+
+1.Create an application that allows the user to enter a number in the textbox. Check whether the number in the textbox is Armstrong or not. Print the message accordingly in the label control
+
+1. Create the Activity Layout (activity_main.xml):
+
+<LinearLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+
+    android:padding="16dp"
+
+    tools:context=".MainActivity">
+
+
+
+    <EditText
+
+        android:id="@+id/number_input"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:hint="Enter a number"
+
+        android:inputType="number" />
+
+
+
+    <Button
+
+        android:id="@+id/check_button"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="16dp"
+
+        android:text="Check Armstrong Number" />
+
+
+
+    <TextView
+
+        android:id="@+id/result_label"
+
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+
+        android:text="" />
+
+
+
+
+</LinearLayout>
+
+
+2. Create the Activity Class (MainActivity.java):
+
+public class MainActivity extends AppCompatActivity {
+
+    private EditText numberInput;
+    private Button checkButton;
+    private TextView resultLabel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        numberInput = findViewById(R.id.number_input);
+        checkButton = findViewById(R.id.check_button);
+        resultLabel = findViewById(R.id.result_label);
+
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputString = numberInput.getText().toString().trim();
+
+                if (inputString.isEmpty()) {
+                    resultLabel.setText("Please enter a number");
+                    return;
+                }
+
+                int number;
+                try {
+                    number = Integer.parseInt(inputString);
+                } catch (NumberFormatException e) {
+                    resultLabel.setText("Invalid number format");
+                    return;
+                }
+
+                if (isArmstrongNumber(number)) {
+                    resultLabel.setText(number + " is an Armstrong number");
+                } else {
+                    resultLabel.setText(number + " is not an Armstrong number");
+                }
+            }
+        });
+    }
+
+    private boolean isArmstrongNumber(int number) {
+        int originalNumber = number;
+        int sum = 0;
+        int numberOfDigits = String.valueOf(number).length();
+
+        while (number > 0) {
+            int digit = number % 10;
+            sum += Math.pow(digit, numberOfDigits);
+            number /= 10;
+        }
+
+        return originalNumber == sum;
+    }
+}
