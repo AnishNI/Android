@@ -1,0 +1,112 @@
+Slip 7
+
+Java Android Program to Demonstrate ProgressBar.
+
+
+
+import android.os.Bundle;
+
+import android.os.Handler;
+
+import android.support.v7.app.AppCompatActivity;
+
+import android.view.View;
+
+import android.widget.Button;
+
+import android.widget.ProgressBar;
+
+
+
+public class ProgressBarActivity extends AppCompatActivity {
+
+
+
+    private ProgressBar progressBar;
+
+    private Button startButton;
+
+
+
+    @Override
+
+    protected void onCreate(Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_progress_bar);
+
+
+
+        progressBar = findViewById(R.id.progressBar);
+
+        startButton = findViewById(R.id.startButton);
+
+
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View v) {
+
+                startProgress();
+
+            }
+
+        });
+
+    }
+
+
+
+    private void startProgress() {
+
+        // Set progress to 0 initially
+
+        progressBar.setProgress(0);
+
+
+
+        // Create a handler to update progress periodically
+
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+
+            @Override
+
+            public void run() {
+
+                int progress = progressBar.getProgress();
+
+                if (progress < progressBar.getMax()) {
+
+                    // Increment progress by 10
+
+                    progressBar.setProgress(progress + 10);
+
+                    // Repeat after 1 second (1000 milliseconds)
+
+                    handler.postDelayed(this, 1000);
+
+                } else {
+
+                    // When progress reaches max, reset progress bar and display completion message
+
+                    progressBar.setProgress(0);
+
+                    // Optionally, display a completion message
+
+                    // Toast.makeText(ProgressBarActivity.this, "Progress completed!", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+        }, 1000); // Start progress after 1 second
+
+    }
+
+}
+
