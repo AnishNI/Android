@@ -1,0 +1,93 @@
+1. Create an application that allows the user to enter a number in the textbox. Check whether the number in the textbox is perfect number or not. Print the message using Toast control
+
+
+
+1. Create the Activity Layout (activity_main.xml):
+
+XML
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/number_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter a number"
+        android:inputType="number" />
+
+    <Button
+        android:id="@+id/check_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Check Perfect Number" />
+
+</LinearLayout>
+
+
+
+
+2. Create the Activity Class (MainActivity.java):
+
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private EditText numberInput;
+    private Button checkButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        numberInput = findViewById(R.id.number_input);
+        checkButton = findViewById(R.id.check_button);
+
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String inputString = numberInput.getText().toString().trim();
+
+                if (inputString.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please enter a number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int number;
+                try {
+                    number = Integer.parseInt(inputString);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "Invalid number format", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (isPerfectNumber(number)) {
+                    Toast.makeText(MainActivity.this, number + " is a perfect number", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, number + " is not a perfect number", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private boolean isPerfectNumber(int number) {
+        if (number <= 1) {
+            return false;
+        }
+
+        int sum = 0;
+        for (int i = 1; i < number; i++) {
+            if (number % i == 0) {
+                sum += i;
+            }
+        }
+
+        return sum == number;
+    }
+}
