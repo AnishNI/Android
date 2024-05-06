@@ -1,0 +1,121 @@
+1. Create the Database Helper Class:
+
+Java
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    private static final String DATABASE_NAME = "student.db";
+    private static final int DATABASE_VERSION = 1;
+
+    public static final String TABLE_NAME = "Student";
+    public static final String COLUMN_ROLL_NO = "roll_no";
+    public static final String COLUMN_NAME = "name";
+    public static final String COLUMN_ADDRESS = "address";
+    public static final String COLUMN_PERCENTAGE = "percentage";
+
+    private static final String CREATE_TABLE_STUDENT = "CREATE TABLE " + TABLE_NAME + "("
+            + COLUMN_ROLL_NO + " INTEGER PRIMARY KEY,"
+            + COLUMN_NAME + " TEXT,"
+            + COLUMN_ADDRESS + " TEXT,"
+            + COLUMN_PERCENTAGE + " REAL" + ")";
+
+    public DatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TABLE_STUDENT);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Handle database schema upgrades if needed
+    }
+}
+
+2. Create Methods for CRUD Operations (Create, Read, Update, Delete):
+
+Java
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+    // ... existing code ...
+
+    public void insertStudent(int rollNo, String name, String address, double percentage) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_ROLL_NO, rollNo);
+        values.put(DatabaseHelper.COLUMN_NAME, name);
+        values.put(DatabaseHelper.COLUMN_ADDRESS, address);
+        values.put(DatabaseHelper.COLUMN_PERCENTAGE, percentage);
+        db.insert(DatabaseHelper.TABLE_NAME, null, values);
+        db.close();
+    }
+
+    public List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.TABLE_NAME, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int rollNo = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.COLUMN_ROLL_NO));
+                String name = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME));
+                String address = cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_ADDRESS));
+                double percentage = cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COLUMN_PERCENTAGE));
+                students.add(new Student(rollNo, name, address, percentage));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return students;
+    }
+
+    // ... other CRUD methods as needed ...
+}
+
+public class Student {
+    private int rollNo;
+    private String name;
+    private String address;
+    private double percentage;
+
+    // ... constructors and getters/setters ...
+}
+
+3. Implement the Functionality in an Activity:
+
+
+Java
+public class MainActivity extends AppCompatActivity {
+
+    private DatabaseHelper dbHelper;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        dbHelper = new DatabaseHelper(this);
+
+        // Insert sample data (replace with button or user input)
+        insertSampleData();
+
+        // Show all students (replace with button or UI element)
+        showStudentDetails();
+    }
+
+    private void insertSampleData() {
+        dbHelper.insertStudent(1, "John Doe", "Address 1", 85.5);
+        dbHelper.insertStudent(2, "Jane Smith", "Address 2", 92.0);
+        // ... add more student data ...
+    }
+
+    private void showStudentDetails() {
+        List<Student> students = dbHelper.getAllStudents();
+        for (Student student : students) {
+            // Display student information using TextViews or other UI elements
+            Log.d("Student Details", "Roll No: " + student.getRollNo() + ", Name: " + student.getName());
+        }
+    }
+}
