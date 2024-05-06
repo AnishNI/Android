@@ -1,0 +1,71 @@
+Create table Employee (E_id, name, address, ph_no). Create Application for performing the following operation on the table. (Using SQLite database). i] Insert record of 5 new Employees. ii] Show all the details of Employee
+
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends AppCompatActivity {
+
+    private SQLiteDatabase mDatabase;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Create or open the database
+        EmployeeDbHelper dbHelper = new EmployeeDbHelper(this);
+        mDatabase = dbHelper.getWritableDatabase();
+
+        // Insert 5 new employees
+        insertEmployee("John Doe", "123 Main St", "1234567890");
+        insertEmployee("Jane Smith", "456 Elm St", "9876543210");
+        insertEmployee("Alice Johnson", "789 Oak St", "5551234567");
+        insertEmployee("Bob Brown", "111 Pine St", "4449876543");
+        insertEmployee("Eva Garcia", "222 Maple St", "2223334444");
+
+        // Show all employee details
+        showEmployeeDetails();
+    }
+
+    private void insertEmployee(String name, String address, String phoneNumber) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EmployeeContract.EmployeeEntry.COLUMN_NAME, name);
+        contentValues.put(EmployeeContract.EmployeeEntry.COLUMN_ADDRESS, address);
+        contentValues.put(EmployeeContract.EmployeeEntry.COLUMN_PH_NO, phoneNumber);
+
+        long newRowId = mDatabase.insert(EmployeeContract.EmployeeEntry.TABLE_NAME, null, contentValues);
+
+        if (newRowId == -1) {
+            Toast.makeText(this, "Error inserting employee", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Employee inserted with ID: " + newRowId, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showEmployeeDetails() {
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM " + EmployeeContract.EmployeeEntry.TABLE_NAME, null);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        while (cursor.moveToNext()) {
+            int id = cursor.getInt(cursor.getColumnIndex(EmployeeContract.EmployeeEntry.COLUMN_ID));
+            String name = cursor.getString(cursor.getColumnIndex(EmployeeContract.EmployeeEntry.COLUMN_NAME));
+            String address = cursor.getString(cursor.getColumnIndex(EmployeeContract.EmployeeEntry.COLUMN_ADDRESS));
+            String phoneNumber = cursor.getString(cursor.getColumnIndex(EmployeeContract.EmployeeEntry.COLUMN_PH_NO));
+
+            stringBuilder.append("ID: ").append(id).append(", Name: ").append(name)
+                    .append(", Address: ").append(address).append(", Phone: ").append(phoneNumber)
+                    .append("\n");
+        }
+
+        cursor.close();
+
+        TextView textView = findViewById(R.id.textView);
+        textView.setText(stringBuilder.toString());
+    }
+}
